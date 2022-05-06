@@ -1,7 +1,8 @@
 export default class Key {
-  constructor(value, keyCode) {
+  constructor(value, keyCode, isChar) {
     this.value = value;
     this.keyCode = keyCode;
+    this.isChar = isChar;
   }
 
   updateValue(value) {
