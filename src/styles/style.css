@@ -1,0 +1,97 @@
+html {
+  box-sizing: border-box;
+  scroll-behavior: smooth;
+}
+
+html,
+body {
+  height: 100%;
+  line-height: 1;
+  font-size: 15px;
+  font-weight: 400;
+  scroll-behavior: smooth;
+}
+
+*,
+*::after,
+*::before {
+  padding: 0;
+  margin: 0;
+  border: 0;
+  box-sizing: inherit;
+}
+
+img {
+  max-width: 100%;
+  vertical-align: top;
+}
+
+a {
+  text-decoration: none;
+}
+
+ul,
+ol,
+li {
+  list-style: none;
+}
+
+img {
+  vertical-align: top;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: inherit;
+  font-size: inherit;
+}
+
+.board {
+  display: flex;
+  column-gap: 5px;
+  row-gap: 5px;
+  max-width: 1024px;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.btn {
+  border: 1px solid black;
+  min-width: 60px;
+  min-height: 60px;
+  text-align: center;
+  padding: 2px;
+}
+
+.btn.space  {
+  min-width: 424px;
+}
+
+.btn.onefive  {
+  min-width: 100px;
+}
+
+.btn.double  {
+  min-width: 140px;
+}
+
+.btn.rightshift {
+  min-width: 204px;
+}
+
+.btn:active {
+  background-color: green;
+}
+
+.textarea {
+  display: block;
+  width: 700px;
+  height: 200px;
+  margin: 10px auto 10px;
+  padding: 10px;
+  font-size: 18px;
+  color: #444444
+}
