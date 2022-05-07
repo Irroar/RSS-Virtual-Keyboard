@@ -12,3 +12,4 @@ const keyboard = new Keyboard('en', mainContainer, textArea);
 
 body.append(mainContainer);
 keyboard.init();
+keyboard.configuratePhysicalButtons();
