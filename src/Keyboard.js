@@ -10,6 +10,7 @@ export default class Keyboard {
     this.container = container;
     this.isPressed = {
       ShiftLeft: false,
+      ShiftRight: false,
       ControlLeft: false,
       AltLeft: false,
     };
@@ -201,18 +202,100 @@ export default class Keyboard {
 
       switch (e.code) {
         case 'ShiftLeft':
+        case 'ShiftRight':
           if (!this.isPressed[e.code]) {
             this.keys.forEach((keyItem) => {
               if (keyItem.isChar) { keyItem.toggleCaps(); }
-              keyItem.toggleShift(enConfig.Shifted, this.currentConfig);
+              keyItem.toggleShift(this.currentConfig.Shifted, this.currentConfig);
             });
           }
           this.isPressed[e.code] = true;
           break;
-        case 'AltLeft':
+        case 'AltLeft': {
+          if (this.isPressed.ShiftLeft || this.isPressed.ShiftRight) {
+            const newLangConfig = this.lang === 'en' ? ruConfig : enConfig;
+            this.keys.forEach((keyItem) => {
+              if (keyItem.isChar) { keyItem.changeLanguage(newLangConfig); }
+            });
+            this.lang = this.lang === 'en' ? 'ru' : 'en';
+            this.currentConfig = newLangConfig;
+            this.isPressed[e.code] = true;
+          }
+          break;
+        }
         case 'ControlLeft':
           this.isPressed[e.code] = true;
           break;
+        case 'Delete': {
+          const startPosition = this.textArea.selectionStart;
+          const endPosition = this.textArea.selectionEnd;
+          if (startPosition === endPosition) {
+            this.textArea.value = this.textArea.value.slice(0, startPosition)
+                        + this.textArea.value.slice(startPosition + 1, this.textArea.value.length);
+            this.textArea.focus();
+            this.textArea.selectionEnd = startPosition;
+          } else {
+            this.textArea.value = this.textArea.value.slice(0, startPosition)
+                              + this.textArea.value.slice(endPosition, this.textArea.value.length);
+            this.textArea.focus();
+            this.textArea.selectionEnd = startPosition;
+          }
+          break;
+        }
+        case 'CapsLock':
+          this.keys.forEach((keyItem) => {
+            if (keyItem.isChar) { keyItem.toggleCaps(); }
+          });
+          break;
+        case 'Tab': {
+          const startPosition = this.textArea.selectionStart;
+          const endPosition = this.textArea.selectionEnd;
+          if (startPosition === endPosition) {
+            this.textArea.value = `${this.textArea.value.slice(0, startPosition)}\t${this.textArea.value.slice(startPosition, this.textArea.value.length)}`;
+            this.textArea.focus();
+            this.textArea.selectionEnd = startPosition + 1;
+          } else {
+            this.textArea.value = `${this.textArea.value.slice(0, startPosition)}\t${this.textArea.value.slice(endPosition, this.textArea.value.length)}`;
+            this.textArea.focus();
+            this.textArea.selectionEnd = startPosition + 1;
+          }
+          break;
+        }
+        case 'Enter': {
+          const startPosition = this.textArea.selectionStart;
+          const endPosition = this.textArea.selectionEnd;
+          if (startPosition === endPosition) {
+            this.textArea.value = `${this.textArea.value.slice(0, startPosition)}\n${this.textArea.value.slice(startPosition, this.textArea.value.length)}`;
+            this.textArea.focus();
+            this.textArea.selectionEnd = startPosition + 1;
+          } else {
+            this.textArea.value = `${this.textArea.value.slice(0, startPosition)}\n${this.textArea.value.slice(endPosition, this.textArea.value.length)}`;
+            this.textArea.focus();
+            this.textArea.selectionEnd = startPosition + 1;
+          }
+          break;
+        }
+        case 'Backspace': {
+          const startPosition = this.textArea.selectionStart;
+          const endPosition = this.textArea.selectionEnd;
+          if (endPosition === 0) {
+            this.textArea.focus();
+            this.textArea.selectionEnd = startPosition;
+            break;
+          }
+          if (startPosition === endPosition) {
+            this.textArea.value = this.textArea.value.slice(0, startPosition - 1)
+                          + this.textArea.value.slice(startPosition, this.textArea.value.length);
+            this.textArea.focus();
+            this.textArea.selectionEnd = startPosition - 1;
+          } else {
+            this.textArea.value = this.textArea.value.slice(0, startPosition)
+                            + this.textArea.value.slice(endPosition, this.textArea.value.length);
+            this.textArea.focus();
+            this.textArea.selectionEnd = startPosition;
+          }
+          break;
+        }
         default:
           break;
       }
@@ -221,9 +304,10 @@ export default class Keyboard {
     document.addEventListener('keyup', (e) => {
       switch (e.code) {
         case 'ShiftLeft':
+        case 'ShiftRight':
           this.keys.forEach((keyItem) => {
             if (keyItem.isChar) { keyItem.toggleCaps(); }
-            keyItem.toggleShift(enConfig.Shifted, this.currentConfig);
+            keyItem.toggleShift(this.currentConfig.Shifted, this.currentConfig);
           });
           this.isPressed[e.code] = false;
           break;

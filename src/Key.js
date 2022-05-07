@@ -31,6 +31,8 @@ export default class Key extends EventEmitter {
     this.isShifted = !this.isShifted;
     if (this.isShifted && Object.prototype.hasOwnProperty.call(shifted, this.keyCode)) {
       this.value = shifted[this.keyCode];
+      //console.log(shifted)
+      //console.log(shifted[this.keyCode])
       this.emit('valueChanged');
     } else if (Object.prototype.hasOwnProperty.call(shifted, this.keyCode)) {
       Object.keys(shifted).forEach((item) => {
@@ -40,5 +42,10 @@ export default class Key extends EventEmitter {
         }
       });
     }
+  }
+
+  changeLanguage(langConfig) {
+    this.value = langConfig[this.keyCode];
+    this.emit('valueChanged');
   }
 }
