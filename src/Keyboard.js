@@ -61,27 +61,96 @@ export default class Keyboard {
             + this.textArea.value.slice(startPosition, this.textArea.value.length);
             this.textArea.focus();
             this.textArea.selectionEnd = startPosition + 1;
+          } else {
+            this.textArea.value = this.textArea.value.slice(0, startPosition) + key.value
+                            + this.textArea.value.slice(endPosition, this.textArea.value.length);
+            this.textArea.focus();
+            this.textArea.selectionEnd = startPosition + 1;
           }
         });
       }
 
-      if (item === 'Backspace') {
-        keyElement.addEventListener('click', () => {
-          const startPosition = this.textArea.selectionStart;
-          const endPosition = this.textArea.selectionEnd;
+      switch (item) {
+        case 'Backspace':
+          keyElement.addEventListener('click', () => {
+            const startPosition = this.textArea.selectionStart;
+            const endPosition = this.textArea.selectionEnd;
 
-          if (startPosition === endPosition) {
-            this.textArea.value = this.textArea.value.slice(0, startPosition - 1)
+            if (startPosition === endPosition) {
+              this.textArea.value = this.textArea.value.slice(0, startPosition - 1)
                             + this.textArea.value.slice(startPosition, this.textArea.value.length);
-            this.textArea.focus();
-            this.textArea.selectionEnd = startPosition - 1;
-          } else {
-            this.textArea.value = this.textArea.value.slice(0, startPosition)
+              this.textArea.focus();
+              this.textArea.selectionEnd = startPosition - 1;
+            } else {
+              this.textArea.value = this.textArea.value.slice(0, startPosition)
                               + this.textArea.value.slice(endPosition, this.textArea.value.length);
-            this.textArea.focus();
-            this.textArea.selectionEnd = startPosition;
-          }
-        });
+              this.textArea.focus();
+              this.textArea.selectionEnd = startPosition;
+            }
+          });
+          break;
+        case 'Delete':
+          keyElement.addEventListener('click', () => {
+            const startPosition = this.textArea.selectionStart;
+            const endPosition = this.textArea.selectionEnd;
+
+            if (startPosition === endPosition) {
+              this.textArea.value = this.textArea.value.slice(0, startPosition)
+                        + this.textArea.value.slice(startPosition + 1, this.textArea.value.length);
+              this.textArea.focus();
+              this.textArea.selectionEnd = startPosition;
+            } else {
+              this.textArea.value = this.textArea.value.slice(0, startPosition)
+                              + this.textArea.value.slice(endPosition, this.textArea.value.length);
+              this.textArea.focus();
+              this.textArea.selectionEnd = startPosition;
+            }
+          });
+          break;
+        case 'Enter':
+          keyElement.addEventListener('click', () => {
+            const startPosition = this.textArea.selectionStart;
+            const endPosition = this.textArea.selectionEnd;
+            if (startPosition === endPosition) {
+              this.textArea.value = `${this.textArea.value.slice(0, startPosition)}\n${this.textArea.value.slice(startPosition, this.textArea.value.length)}`;
+              this.textArea.focus();
+              this.textArea.selectionEnd = startPosition + 1;
+            } else {
+              this.textArea.value = `${this.textArea.value.slice(0, startPosition)}\n${this.textArea.value.slice(endPosition, this.textArea.value.length)}`;
+              this.textArea.focus();
+              this.textArea.selectionEnd = startPosition + 1;
+            }
+          });
+          break;
+        case 'Tab':
+          keyElement.addEventListener('click', () => {
+            const startPosition = this.textArea.selectionStart;
+            const endPosition = this.textArea.selectionEnd;
+            if (startPosition === endPosition) {
+              this.textArea.value = `${this.textArea.value.slice(0, startPosition)}\t${this.textArea.value.slice(startPosition, this.textArea.value.length)}`;
+              this.textArea.focus();
+              this.textArea.selectionEnd = startPosition + 1;
+            } else {
+              this.textArea.value = `${this.textArea.value.slice(0, startPosition)}\t${this.textArea.value.slice(endPosition, this.textArea.value.length)}`;
+              this.textArea.focus();
+              this.textArea.selectionEnd = startPosition + 1;
+            }
+          });
+          break;
+        case 'CapsLock':
+          keyElement.addEventListener('click', () => {
+            keyElement.classList.toggle('pressed');
+            this.keys.forEach((keyItem) => {
+              if (keyItem.isChar) {
+                keyItem.toggleCaps();
+                const elem = document.querySelector(`[data-key-code=${keyItem.keyCode}]`);
+                elem.innerHTML = keyItem.value;
+              }
+            });
+          });
+          break;
+        default:
+          break;
       }
 
       this.keys.push(key);

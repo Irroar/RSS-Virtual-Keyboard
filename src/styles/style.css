@@ -78,6 +78,10 @@ h6 {
   background-color: green;
 }
 
+.btn.pressed {
+  background-color: green;
+}
+
 .textarea {
   display: block;
   width: 1024px;
@@ -96,3 +100,5 @@ h6 {
 .textarea:focus {
   outline: none;
 }
+
+

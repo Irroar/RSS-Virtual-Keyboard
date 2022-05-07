@@ -3,6 +3,7 @@ export default class Key {
     this.value = value;
     this.keyCode = keyCode;
     this.isChar = isChar;
+    this.isCapsed = false;
   }
 
   updateValue(value) {
@@ -16,5 +17,12 @@ export default class Key {
     key.innerHTML = this.value;
     key.dataset.keyCode = this.keyCode;
     return key;
+  }
+
+  toggleCaps() {
+    this.isCapsed = !this.isCapsed;
+    if (this.isCapsed) {
+      this.value = this.value.toUpperCase();
+    } else { this.value = this.value.toLowerCase(); }
   }
 }
