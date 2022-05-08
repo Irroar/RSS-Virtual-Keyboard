@@ -33,7 +33,7 @@ export default class Keyboard {
       'Digit0', 'Minus', 'Equal', 'KeyQ', 'KeyW', 'KeyE', 'KeyR', 'KeyT',
       'KeyY', 'KeyU', 'KeyI', 'KeyO', 'KeyP', 'BracketLeft', 'BracketRight', 'Backslash', 'KeyA',
       'KeyS', 'KeyD', 'KeyF', 'KeyG', 'KeyH', 'KeyJ', 'KeyK', 'KeyL', 'Semicolon', 'Quote', 'KeyZ', 'KeyX', 'KeyC', 'KeyV', 'KeyB', 'KeyN', 'KeyM', 'Comma',
-      'Period', 'Slash', 'Space', 'Backquote'];
+      'Period', 'Slash', 'Space', 'Backquote', 'ArrowUp', 'ArrowLeft', 'ArrowDown', 'ArrowRight'];
 
     this.keysLayout.forEach((item) => {
       const isChar = this.simpleKeys.includes(item) ? 1 : 0;
