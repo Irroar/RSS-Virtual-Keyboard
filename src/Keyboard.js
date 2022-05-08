@@ -147,17 +147,7 @@ export default class Keyboard {
           break;
         case 'Tab':
           keyElement.addEventListener('click', () => {
-            const startPosition = this.textArea.selectionStart;
-            const endPosition = this.textArea.selectionEnd;
-            if (startPosition === endPosition) {
-              this.textArea.value = `${this.textArea.value.slice(0, startPosition)}\t${this.textArea.value.slice(startPosition, this.textArea.value.length)}`;
-              this.textArea.focus();
-              this.textArea.selectionEnd = startPosition + 1;
-            } else {
-              this.textArea.value = `${this.textArea.value.slice(0, startPosition)}\t${this.textArea.value.slice(endPosition, this.textArea.value.length)}`;
-              this.textArea.focus();
-              this.textArea.selectionEnd = startPosition + 1;
-            }
+            this.inputChar('\t');
           });
           break;
         case 'CapsLock':
@@ -185,23 +175,11 @@ export default class Keyboard {
       } else if (elem) { elem.classList.add('pressed'); }
       if (this.keysLayout.includes(e.code)) { e.preventDefault(); }
       if (this.simpleKeys.includes(e.code)) {
-        const startPosition = this.textArea.selectionStart;
-        const endPosition = this.textArea.selectionEnd;
         let inputChar = '';
         this.keys.forEach((keyItem) => {
           if (keyItem.keyCode === e.code) { inputChar = keyItem.value; }
         });
-        if (startPosition === endPosition) {
-          this.textArea.value = this.textArea.value.slice(0, startPosition) + inputChar
-            + this.textArea.value.slice(startPosition, this.textArea.value.length);
-          this.textArea.focus();
-          this.textArea.selectionEnd = startPosition + 1;
-        } else {
-          this.textArea.value = this.textArea.value.slice(0, startPosition) + inputChar
-                          + this.textArea.value.slice(endPosition, this.textArea.value.length);
-          this.textArea.focus();
-          this.textArea.selectionEnd = startPosition + 1;
-        }
+        this.inputChar(inputChar);
       }
 
       switch (e.code) {
@@ -231,76 +209,23 @@ export default class Keyboard {
         case 'ControlLeft':
           this.isPressed[e.code] = true;
           break;
-        case 'Delete': {
-          const startPosition = this.textArea.selectionStart;
-          const endPosition = this.textArea.selectionEnd;
-          if (startPosition === endPosition) {
-            this.textArea.value = this.textArea.value.slice(0, startPosition)
-                        + this.textArea.value.slice(startPosition + 1, this.textArea.value.length);
-            this.textArea.focus();
-            this.textArea.selectionEnd = startPosition;
-          } else {
-            this.textArea.value = this.textArea.value.slice(0, startPosition)
-                              + this.textArea.value.slice(endPosition, this.textArea.value.length);
-            this.textArea.focus();
-            this.textArea.selectionEnd = startPosition;
-          }
+        case 'Delete':
+          this.removeChar('right');
           break;
-        }
         case 'CapsLock':
           this.keys.forEach((keyItem) => {
             if (keyItem.isChar) { keyItem.toggleCaps(); }
           });
           break;
-        case 'Tab': {
-          const startPosition = this.textArea.selectionStart;
-          const endPosition = this.textArea.selectionEnd;
-          if (startPosition === endPosition) {
-            this.textArea.value = `${this.textArea.value.slice(0, startPosition)}\t${this.textArea.value.slice(startPosition, this.textArea.value.length)}`;
-            this.textArea.focus();
-            this.textArea.selectionEnd = startPosition + 1;
-          } else {
-            this.textArea.value = `${this.textArea.value.slice(0, startPosition)}\t${this.textArea.value.slice(endPosition, this.textArea.value.length)}`;
-            this.textArea.focus();
-            this.textArea.selectionEnd = startPosition + 1;
-          }
+        case 'Tab':
+          this.inputChar('\t');
           break;
-        }
-        case 'Enter': {
-          const startPosition = this.textArea.selectionStart;
-          const endPosition = this.textArea.selectionEnd;
-          if (startPosition === endPosition) {
-            this.textArea.value = `${this.textArea.value.slice(0, startPosition)}\n${this.textArea.value.slice(startPosition, this.textArea.value.length)}`;
-            this.textArea.focus();
-            this.textArea.selectionEnd = startPosition + 1;
-          } else {
-            this.textArea.value = `${this.textArea.value.slice(0, startPosition)}\n${this.textArea.value.slice(endPosition, this.textArea.value.length)}`;
-            this.textArea.focus();
-            this.textArea.selectionEnd = startPosition + 1;
-          }
+        case 'Enter':
+          this.inputChar('\n');
           break;
-        }
-        case 'Backspace': {
-          const startPosition = this.textArea.selectionStart;
-          const endPosition = this.textArea.selectionEnd;
-          if (endPosition === 0) {
-            this.textArea.focus();
-            this.textArea.selectionEnd = startPosition;
-            break;
-          }
-          if (startPosition === endPosition) {
-            this.textArea.value = this.textArea.value.slice(0, startPosition - 1)
-                          + this.textArea.value.slice(startPosition, this.textArea.value.length);
-            this.textArea.focus();
-            this.textArea.selectionEnd = startPosition - 1;
-          } else {
-            this.textArea.value = this.textArea.value.slice(0, startPosition)
-                            + this.textArea.value.slice(endPosition, this.textArea.value.length);
-            this.textArea.focus();
-            this.textArea.selectionEnd = startPosition;
-          }
+        case 'Backspace':
+          this.removeChar('left');
           break;
-        }
         default:
           break;
       }

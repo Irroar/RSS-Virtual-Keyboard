@@ -44,6 +44,9 @@ export default class Key extends EventEmitter {
 
   changeLanguage(langConfig) {
     this.value = langConfig[this.keyCode];
+    if (this.isCapsed) {
+      this.value = this.value.toUpperCase();
+    }
     this.emit('valueChanged');
   }
 }
