@@ -12,10 +12,11 @@ export default class Keyboard {
       ShiftLeft: false,
       ShiftRight: false,
       ControlLeft: false,
+      ControlRight: false,
       AltLeft: false,
       CapsLock: false,
     };
-    this.currentConfig = enConfig;
+    this.currentConfig = this.lang === 'en' ? enConfig : ruConfig;
     this.capsCounter = 0;
   }
 
@@ -184,7 +185,7 @@ export default class Keyboard {
       const elem = document.querySelector(`[data-key-code=${e.code}]`);
       if (elem && e.code === 'CapsLock') {
         if (this.capsCounter < 2) { elem.classList.toggle('pressed'); }
-      } else { elem.classList.add('pressed'); }
+      } else if (elem) { elem.classList.add('pressed'); }
       if (this.keysLayout.includes(e.code)) { e.preventDefault(); }
       if (this.simpleKeys.includes(e.code)) {
         const startPosition = this.textArea.selectionStart;
@@ -218,12 +219,13 @@ export default class Keyboard {
           this.isPressed[e.code] = true;
           break;
         case 'AltLeft': {
-          if (this.isPressed.ShiftLeft || this.isPressed.ShiftRight) {
+          if (this.isPressed.ControlLeft || this.isPressed.ControlRight) {
             const newLangConfig = this.lang === 'en' ? ruConfig : enConfig;
             this.keys.forEach((keyItem) => {
               if (keyItem.isChar) { keyItem.changeLanguage(newLangConfig); }
             });
             this.lang = this.lang === 'en' ? 'ru' : 'en';
+            localStorage.setItem('language', this.lang);
             this.currentConfig = newLangConfig;
             this.isPressed[e.code] = true;
           }

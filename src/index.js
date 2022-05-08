@@ -11,7 +11,8 @@ textArea.className = 'textarea';
 wrapper.append(textArea);
 kayboardContainer.className = 'board';
 
-const keyboard = new Keyboard('en', kayboardContainer, textArea);
+const storagedLang = localStorage.getItem('language');
+const keyboard = new Keyboard(storagedLang, kayboardContainer, textArea);
 
 wrapper.append(kayboardContainer);
 keyboard.init();
