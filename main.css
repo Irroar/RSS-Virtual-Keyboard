@@ -100,10 +100,12 @@ h6 {
 .btn:active {
   color: #7fff00;
   border-color: #7fff00;
+  transform: scale(0.9);
 }
 
 .btn.pressed {
   color: #7fff00;
+  transform: scale(0.9);
   border-color: #7fff00;
 }
 
