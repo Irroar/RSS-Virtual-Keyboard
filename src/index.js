@@ -2,14 +2,17 @@ import Keyboard from './Keyboard';
 import './styles/style.css';
 
 const body = document.querySelector('body');
+const wrapper = document.createElement('div');
+wrapper.className = 'wrapper';
+body.append(wrapper);
 const textArea = document.createElement('textarea');
-const mainContainer = document.createElement('div');
+const kayboardContainer = document.createElement('div');
 textArea.className = 'textarea';
-body.append(textArea);
-mainContainer.className = 'board';
+wrapper.append(textArea);
+kayboardContainer.className = 'board';
 
-const keyboard = new Keyboard('en', mainContainer, textArea);
+const keyboard = new Keyboard('en', kayboardContainer, textArea);
 
-body.append(mainContainer);
+wrapper.append(kayboardContainer);
 keyboard.init();
 keyboard.configuratePhysicalButtons();

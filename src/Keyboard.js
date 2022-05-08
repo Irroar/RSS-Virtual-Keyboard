@@ -13,8 +13,10 @@ export default class Keyboard {
       ShiftRight: false,
       ControlLeft: false,
       AltLeft: false,
+      CapsLock: false,
     };
     this.currentConfig = enConfig;
+    this.capsCounter = 0;
   }
 
   init() {
@@ -179,6 +181,10 @@ export default class Keyboard {
 
   configuratePhysicalButtons() {
     document.addEventListener('keydown', (e) => {
+      const elem = document.querySelector(`[data-key-code=${e.code}]`);
+      if (elem && e.code === 'CapsLock') {
+        if (this.capsCounter < 2) { elem.classList.toggle('pressed'); }
+      } else { elem.classList.add('pressed'); }
       if (this.keysLayout.includes(e.code)) { e.preventDefault(); }
       if (this.simpleKeys.includes(e.code)) {
         const startPosition = this.textArea.selectionStart;
@@ -302,6 +308,9 @@ export default class Keyboard {
     });
 
     document.addEventListener('keyup', (e) => {
+      const elem = document.querySelector(`[data-key-code=${e.code}]`);
+      if (elem && e.code !== 'CapsLock') { elem.classList.remove('pressed'); }
+      if (elem && e.code === 'CapsLock') { this.capsCounter = 0; }
       switch (e.code) {
         case 'ShiftLeft':
         case 'ShiftRight':
