@@ -66,52 +66,83 @@ export default class Keyboard {
 
       if (key.isChar) {
         let intervalId = null;
+        let timeoutId = null;
         keyElement.addEventListener('mousedown', () => {
-          this.inputChar(key);
+          this.inputChar(key.value);
           keyElement.classList.add('pressed');
-          setTimeout(() => {
+          timeoutId = setTimeout(() => {
             intervalId = setInterval(() => {
-              this.inputChar(key);
+              this.inputChar(key.value);
               keyElement.classList.add('pressed');
             }, 40);
           }, 500);
         });
         keyElement.addEventListener('mouseout', () => {
+          clearTimeout(timeoutId);
           clearInterval(intervalId);
           keyElement.classList.remove('pressed');
-          this.buttonPressCounter = 0;
         });
         keyElement.addEventListener('mouseup', () => {
           clearInterval(intervalId);
+          clearTimeout(timeoutId);
           keyElement.classList.remove('pressed');
-          this.buttonPressCounter = 0;
         });
       }
 
       switch (item) {
-        case 'Backspace':
-          keyElement.addEventListener('click', () => {
+        case 'Backspace': {
+          let intervalId = null;
+          let timeoutId = null;
+          keyElement.addEventListener('mousedown', () => {
             this.removeChar('left');
+            keyElement.classList.add('pressed');
+            timeoutId = setTimeout(() => {
+              intervalId = setInterval(() => {
+                this.removeChar('left');
+                keyElement.classList.add('pressed');
+              }, 40);
+            }, 500);
+          });
+          keyElement.addEventListener('mouseout', () => {
+            clearInterval(intervalId);
+            clearTimeout(timeoutId);
+            keyElement.classList.remove('pressed');
+          });
+          keyElement.addEventListener('mouseup', () => {
+            clearInterval(intervalId);
+            clearTimeout(timeoutId);
+            keyElement.classList.remove('pressed');
           });
           break;
-        case 'Delete':
-          keyElement.addEventListener('click', () => {
+        }
+        case 'Delete': {
+          let intervalId = null;
+          let timeoutId = null;
+          keyElement.addEventListener('mousedown', () => {
             this.removeChar('right');
+            keyElement.classList.add('pressed');
+            timeoutId = setTimeout(() => {
+              intervalId = setInterval(() => {
+                this.removeChar('right');
+                keyElement.classList.add('pressed');
+              }, 40);
+            }, 500);
+          });
+          keyElement.addEventListener('mouseout', () => {
+            clearInterval(intervalId);
+            clearTimeout(timeoutId);
+            keyElement.classList.remove('pressed');
+          });
+          keyElement.addEventListener('mouseup', () => {
+            clearInterval(intervalId);
+            clearTimeout(timeoutId);
+            keyElement.classList.remove('pressed');
           });
           break;
+        }
         case 'Enter':
           keyElement.addEventListener('click', () => {
-            const startPosition = this.textArea.selectionStart;
-            const endPosition = this.textArea.selectionEnd;
-            if (startPosition === endPosition) {
-              this.textArea.value = `${this.textArea.value.slice(0, startPosition)}\n${this.textArea.value.slice(startPosition, this.textArea.value.length)}`;
-              this.textArea.focus();
-              this.textArea.selectionEnd = startPosition + 1;
-            } else {
-              this.textArea.value = `${this.textArea.value.slice(0, startPosition)}\n${this.textArea.value.slice(endPosition, this.textArea.value.length)}`;
-              this.textArea.focus();
-              this.textArea.selectionEnd = startPosition + 1;
-            }
+            this.inputChar('\n');
           });
           break;
         case 'Tab':
@@ -303,16 +334,16 @@ export default class Keyboard {
     elem.innerHTML = this.value;
   }
 
-  inputChar(key) {
+  inputChar(value) {
     const startPosition = this.textArea.selectionStart;
     const endPosition = this.textArea.selectionEnd;
     if (startPosition === endPosition) {
-      this.textArea.value = this.textArea.value.slice(0, startPosition) + key.value
+      this.textArea.value = this.textArea.value.slice(0, startPosition) + value
       + this.textArea.value.slice(startPosition, this.textArea.value.length);
       this.textArea.focus();
       this.textArea.selectionEnd = startPosition + 1;
     } else {
-      this.textArea.value = this.textArea.value.slice(0, startPosition) + key.value
+      this.textArea.value = this.textArea.value.slice(0, startPosition) + value
                     + this.textArea.value.slice(endPosition, this.textArea.value.length);
       this.textArea.focus();
       this.textArea.selectionEnd = startPosition + 1;
