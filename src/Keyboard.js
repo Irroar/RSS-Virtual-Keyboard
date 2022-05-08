@@ -63,16 +63,17 @@ export default class Keyboard {
       }
       const keyElement = key.createElement(option);
       key.on('valueChanged', this.renderKeyboard);
-
       if (key.isChar) {
         let intervalId = null;
         let timeoutId = null;
         keyElement.addEventListener('mousedown', () => {
           this.inputChar(key.value);
+          this.textArea.focus();
           keyElement.classList.add('pressed');
           timeoutId = setTimeout(() => {
             intervalId = setInterval(() => {
               this.inputChar(key.value);
+              this.textArea.focus();
               keyElement.classList.add('pressed');
             }, 40);
           }, 500);
@@ -80,11 +81,13 @@ export default class Keyboard {
         keyElement.addEventListener('mouseout', () => {
           clearTimeout(timeoutId);
           clearInterval(intervalId);
+          this.textArea.focus();
           keyElement.classList.remove('pressed');
         });
         keyElement.addEventListener('mouseup', () => {
           clearInterval(intervalId);
           clearTimeout(timeoutId);
+          this.textArea.focus();
           keyElement.classList.remove('pressed');
         });
       }
@@ -95,10 +98,12 @@ export default class Keyboard {
           let timeoutId = null;
           keyElement.addEventListener('mousedown', () => {
             this.removeChar('left');
+            this.textArea.focus();
             keyElement.classList.add('pressed');
             timeoutId = setTimeout(() => {
               intervalId = setInterval(() => {
                 this.removeChar('left');
+                this.textArea.focus();
                 keyElement.classList.add('pressed');
               }, 40);
             }, 500);
@@ -106,11 +111,13 @@ export default class Keyboard {
           keyElement.addEventListener('mouseout', () => {
             clearInterval(intervalId);
             clearTimeout(timeoutId);
+            this.textArea.focus();
             keyElement.classList.remove('pressed');
           });
           keyElement.addEventListener('mouseup', () => {
             clearInterval(intervalId);
             clearTimeout(timeoutId);
+            this.textArea.focus();
             keyElement.classList.remove('pressed');
           });
           break;
@@ -120,10 +127,12 @@ export default class Keyboard {
           let timeoutId = null;
           keyElement.addEventListener('mousedown', () => {
             this.removeChar('right');
+            this.textArea.focus();
             keyElement.classList.add('pressed');
             timeoutId = setTimeout(() => {
               intervalId = setInterval(() => {
                 this.removeChar('right');
+                this.textArea.focus();
                 keyElement.classList.add('pressed');
               }, 40);
             }, 500);
@@ -131,11 +140,13 @@ export default class Keyboard {
           keyElement.addEventListener('mouseout', () => {
             clearInterval(intervalId);
             clearTimeout(timeoutId);
+            this.textArea.focus();
             keyElement.classList.remove('pressed');
           });
           keyElement.addEventListener('mouseup', () => {
             clearInterval(intervalId);
             clearTimeout(timeoutId);
+            this.textArea.focus();
             keyElement.classList.remove('pressed');
           });
           break;
@@ -143,11 +154,13 @@ export default class Keyboard {
         case 'Enter':
           keyElement.addEventListener('click', () => {
             this.inputChar('\n');
+            this.textArea.focus();
           });
           break;
         case 'Tab':
           keyElement.addEventListener('click', () => {
             this.inputChar('\t');
+            this.textArea.focus();
           });
           break;
         case 'CapsLock':
@@ -156,6 +169,7 @@ export default class Keyboard {
             this.keys.forEach((keyItem) => {
               if (keyItem.isChar) { keyItem.toggleCaps(); }
             });
+            this.textArea.focus();
           });
           break;
         default:
@@ -265,12 +279,10 @@ export default class Keyboard {
     if (startPosition === endPosition) {
       this.textArea.value = this.textArea.value.slice(0, startPosition) + value
       + this.textArea.value.slice(startPosition, this.textArea.value.length);
-      this.textArea.focus();
       this.textArea.selectionEnd = startPosition + 1;
     } else {
       this.textArea.value = this.textArea.value.slice(0, startPosition) + value
                     + this.textArea.value.slice(endPosition, this.textArea.value.length);
-      this.textArea.focus();
       this.textArea.selectionEnd = startPosition + 1;
     }
   }
@@ -283,7 +295,6 @@ export default class Keyboard {
     const endPosition = this.textArea.selectionEnd;
 
     if (direction === 'left' && endPosition === 0) {
-      this.textArea.focus();
       this.textArea.selectionEnd = startPosition;
       return;
     }
@@ -291,12 +302,10 @@ export default class Keyboard {
     if (startPosition === endPosition) {
       this.textArea.value = this.textArea.value.slice(0, startPosition - leftOffset)
               + this.textArea.value.slice(startPosition + rightOffset, this.textArea.value.length);
-      this.textArea.focus();
       this.textArea.selectionEnd = startPosition - leftOffset;
     } else {
       this.textArea.value = this.textArea.value.slice(0, startPosition)
                           + this.textArea.value.slice(endPosition, this.textArea.value.length);
-      this.textArea.focus();
       this.textArea.selectionEnd = startPosition;
     }
   }
