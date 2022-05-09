@@ -141,6 +141,11 @@ h6 {
 
 .description {
   font-size: 24px;
+
 }
 
+.checkbox-label {
+  padding-left: 10px;
+  font-size: 24px;
+}
 
