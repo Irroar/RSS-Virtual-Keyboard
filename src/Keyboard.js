@@ -66,32 +66,6 @@ export default class Keyboard {
       key.on('valueChanged', this.renderKeyboard);
       if (key.isChar) {
         this.initListeners(keyElement, this.inputChar, key.value);
-        // let intervalId = null;
-        // let timeoutId = null;
-        // keyElement.addEventListener('mousedown', () => {
-        //   this.inputChar(key.value);
-        //   this.textArea.focus();
-        //   keyElement.classList.add('pressed');
-        //   timeoutId = setTimeout(() => {
-        //     intervalId = setInterval(() => {
-        //       this.inputChar(key.value);
-        //       this.textArea.focus();
-        //       keyElement.classList.add('pressed');
-        //     }, 40);
-        //   }, 500);
-        // });
-        // keyElement.addEventListener('mouseout', () => {
-        //   clearTimeout(timeoutId);
-        //   clearInterval(intervalId);
-        //   this.textArea.focus();
-        //   keyElement.classList.remove('pressed');
-        // });
-        // keyElement.addEventListener('mouseup', () => {
-        //   clearInterval(intervalId);
-        //   clearTimeout(timeoutId);
-        //   this.textArea.focus();
-        //   keyElement.classList.remove('pressed');
-        // });
       }
 
       switch (item) {
