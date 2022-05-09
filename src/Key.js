@@ -15,7 +15,11 @@ export default class Key extends EventEmitter {
     key.className = 'btn';
     if (option) { key.classList.add(option); }
     key.innerHTML = this.value;
-    key.dataset.keyCode = this.keyCode;
+    if (this.keyCode === 'ShiftRight' || this.keyCode === 'ShiftLeft') {
+      key.dataset.keyCode = 'Shift';
+    } else {
+      key.dataset.keyCode = this.keyCode;
+    }
     return key;
   }
 

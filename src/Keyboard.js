@@ -9,8 +9,7 @@ export default class Keyboard {
     this.keys = [];
     this.container = container;
     this.isPressed = {
-      ShiftLeft: false,
-      ShiftRight: false,
+      Shift: false,
       ControlLeft: false,
       ControlRight: false,
       AltLeft: false,
@@ -96,12 +95,61 @@ export default class Keyboard {
             this.textArea.focus();
           });
           break;
+        case 'AltLeft':
+          keyElement.addEventListener('click', () => {
+            if (this.isPressed.ControlLeft) {
+              const newLangConfig = this.lang === 'en' ? ruConfig : enConfig;
+              this.keys.forEach((keyItem) => {
+                if (keyItem.isChar) { keyItem.changeLanguage(newLangConfig); }
+              });
+              this.lang = this.lang === 'en' ? 'ru' : 'en';
+              localStorage.setItem('language', this.lang);
+              this.currentConfig = newLangConfig;
+            }
+          });
+          this.textArea.focus();
+          break;
         default:
           break;
       }
 
       this.keys.push(key);
       this.container.append(keyElement);
+    });
+
+    const stikyModeCheckbox = document.querySelector('.sticky-checkbox');
+    const shifts = document.querySelectorAll('[data-key-code=Shift]');
+    const ctrlLeft = document.querySelector('[data-key-code=ControlLeft]');
+
+    function stickyShift() {
+      shifts.forEach((item) => {
+        item.classList.toggle('pressed');
+      });
+      this.keys.forEach((keyItem) => {
+        if (keyItem.isChar) { keyItem.toggleCaps(); }
+      });
+    }
+
+    function stickyControl() {
+      ctrlLeft.classList.toggle('pressed');
+      this.isPressed.ControlLeft = true;
+    }
+
+    const stickyControlListener = stickyControl.bind(this);
+    const stickyShiftListener = stickyShift.bind(this);
+
+    stikyModeCheckbox.addEventListener('change', () => {
+      if (stikyModeCheckbox.checked) {
+        shifts.forEach((shift) => {
+          shift.addEventListener('mousedown', stickyShiftListener);
+        });
+        ctrlLeft.addEventListener('mousedown', stickyControlListener);
+      } else {
+        shifts.forEach((shift) => {
+          shift.addEventListener('mousedown', stickyShiftListener);
+        });
+        ctrlLeft.removeEventListener('mousedown', stickyControlListener);
+      }
     });
   }
 
@@ -126,19 +174,23 @@ export default class Keyboard {
         this.inputChar(inputChar);
       }
 
+      if (e.key === 'Shift') {
+        const shifts = document.querySelectorAll(`[data-key-code=${e.key}]`);
+        shifts.forEach((item) => {
+          item.classList.add('pressed');
+        });
+        if (!this.isPressed[e.key]) {
+          this.keys.forEach((keyItem) => {
+            if (keyItem.isChar) { keyItem.toggleCaps(); }
+            keyItem.toggleShift(this.currentConfig.Shifted, this.currentConfig);
+          });
+        }
+        this.isPressed[e.key] = true;
+      }
+
       switch (e.code) {
-        case 'ShiftLeft':
-        case 'ShiftRight':
-          if (!this.isPressed[e.code]) {
-            this.keys.forEach((keyItem) => {
-              if (keyItem.isChar) { keyItem.toggleCaps(); }
-              keyItem.toggleShift(this.currentConfig.Shifted, this.currentConfig);
-            });
-          }
-          this.isPressed[e.code] = true;
-          break;
         case 'AltLeft': {
-          if (this.isPressed.ControlLeft || this.isPressed.ControlRight) {
+          if (this.isPressed.ControlLeft) {
             const newLangConfig = this.lang === 'en' ? ruConfig : enConfig;
             this.keys.forEach((keyItem) => {
               if (keyItem.isChar) { keyItem.changeLanguage(newLangConfig); }
@@ -172,17 +224,21 @@ export default class Keyboard {
 
     document.addEventListener('keyup', (e) => {
       const elem = document.querySelector(`[data-key-code=${e.code}]`);
-      if (elem && e.code !== 'CapsLock') { elem.classList.remove('pressed'); }
+      if (elem && e.code !== 'CapsLock') { if (e.key !== 'Shift') { elem.classList.remove('pressed'); } }
       if (elem && e.code === 'CapsLock') { this.capsCounter = 0; }
+
+      if (e.key === 'Shift') {
+        const shifts = document.querySelectorAll(`[data-key-code=${e.key}]`);
+        shifts.forEach((item) => {
+          item.classList.remove('pressed');
+        });
+        this.keys.forEach((keyItem) => {
+          if (keyItem.isChar) { keyItem.toggleCaps(); }
+          keyItem.toggleShift(this.currentConfig.Shifted, this.currentConfig);
+        });
+        this.isPressed[e.key] = false;
+      }
       switch (e.code) {
-        case 'ShiftLeft':
-        case 'ShiftRight':
-          this.keys.forEach((keyItem) => {
-            if (keyItem.isChar) { keyItem.toggleCaps(); }
-            keyItem.toggleShift(this.currentConfig.Shifted, this.currentConfig);
-          });
-          this.isPressed[e.code] = false;
-          break;
         case 'AltLeft':
         case 'ControlLeft':
           this.isPressed[e.code] = false;
