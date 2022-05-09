@@ -18,6 +18,7 @@ export default class Keyboard {
     };
     this.currentConfig = this.lang === 'en' ? enConfig : ruConfig;
     this.capsCounter = 0;
+    this.isCapsPressed = false;
   }
 
   init() {
@@ -64,40 +65,41 @@ export default class Keyboard {
       const keyElement = key.createElement(option);
       key.on('valueChanged', this.renderKeyboard);
       if (key.isChar) {
-        let intervalId = null;
-        let timeoutId = null;
-        keyElement.addEventListener('mousedown', () => {
-          this.inputChar(key.value);
-          this.textArea.focus();
-          keyElement.classList.add('pressed');
-          timeoutId = setTimeout(() => {
-            intervalId = setInterval(() => {
-              this.inputChar(key.value);
-              this.textArea.focus();
-              keyElement.classList.add('pressed');
-            }, 40);
-          }, 500);
-        });
-        keyElement.addEventListener('mouseout', () => {
-          clearTimeout(timeoutId);
-          clearInterval(intervalId);
-          this.textArea.focus();
-          keyElement.classList.remove('pressed');
-        });
-        keyElement.addEventListener('mouseup', () => {
-          clearInterval(intervalId);
-          clearTimeout(timeoutId);
-          this.textArea.focus();
-          keyElement.classList.remove('pressed');
-        });
+        this.initListeners(keyElement, this.inputChar, key.value);
+        // let intervalId = null;
+        // let timeoutId = null;
+        // keyElement.addEventListener('mousedown', () => {
+        //   this.inputChar(key.value);
+        //   this.textArea.focus();
+        //   keyElement.classList.add('pressed');
+        //   timeoutId = setTimeout(() => {
+        //     intervalId = setInterval(() => {
+        //       this.inputChar(key.value);
+        //       this.textArea.focus();
+        //       keyElement.classList.add('pressed');
+        //     }, 40);
+        //   }, 500);
+        // });
+        // keyElement.addEventListener('mouseout', () => {
+        //   clearTimeout(timeoutId);
+        //   clearInterval(intervalId);
+        //   this.textArea.focus();
+        //   keyElement.classList.remove('pressed');
+        // });
+        // keyElement.addEventListener('mouseup', () => {
+        //   clearInterval(intervalId);
+        //   clearTimeout(timeoutId);
+        //   this.textArea.focus();
+        //   keyElement.classList.remove('pressed');
+        // });
       }
 
       switch (item) {
         case 'Backspace':
-          this.initRemovingListeners(keyElement, this.removeChar, 'left');
+          this.initListeners(keyElement, this.removeChar, 'left');
           break;
         case 'Delete':
-          this.initRemovingListeners(keyElement, this.removeChar, 'right');
+          this.initListeners(keyElement, this.removeChar, 'right');
           break;
         case 'Enter':
           keyElement.addEventListener('click', () => {
@@ -112,7 +114,7 @@ export default class Keyboard {
           });
           break;
         case 'CapsLock':
-          keyElement.addEventListener('click', () => {
+          keyElement.addEventListener('mousedown', () => {
             keyElement.classList.toggle('pressed');
             this.keys.forEach((keyItem) => {
               if (keyItem.isChar) { keyItem.toggleCaps(); }
@@ -133,7 +135,13 @@ export default class Keyboard {
     document.addEventListener('keydown', (e) => {
       const elem = document.querySelector(`[data-key-code=${e.code}]`);
       if (elem && e.code === 'CapsLock') {
-        if (this.capsCounter < 2) { elem.classList.toggle('pressed'); }
+        this.capsCounter += 1;
+        if (this.capsCounter < 2) {
+          elem.classList.toggle('pressed');
+          this.keys.forEach((keyItem) => {
+            if (keyItem.isChar) { keyItem.toggleCaps(); }
+          });
+        }
       } else if (elem) { elem.classList.add('pressed'); }
       if (this.keysLayout.includes(e.code)) { e.preventDefault(); }
       if (this.simpleKeys.includes(e.code)) {
@@ -173,11 +181,6 @@ export default class Keyboard {
           break;
         case 'Delete':
           this.removeChar('right');
-          break;
-        case 'CapsLock':
-          this.keys.forEach((keyItem) => {
-            if (keyItem.isChar) { keyItem.toggleCaps(); }
-          });
           break;
         case 'Tab':
           this.inputChar('\t');
@@ -258,7 +261,7 @@ export default class Keyboard {
     }
   }
 
-  initRemovingListeners(element, func, option) {
+  initListeners(element, func, option) {
     let intervalId = null;
     let timeoutId = null;
     element.addEventListener('mousedown', () => {
@@ -267,7 +270,7 @@ export default class Keyboard {
       element.classList.add('pressed');
       timeoutId = setTimeout(() => {
         intervalId = setInterval(() => {
-          this.removeChar(option);
+          func.call(this, option);
           this.textArea.focus();
           element.classList.add('pressed');
         }, 40);
