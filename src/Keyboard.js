@@ -93,64 +93,12 @@ export default class Keyboard {
       }
 
       switch (item) {
-        case 'Backspace': {
-          let intervalId = null;
-          let timeoutId = null;
-          keyElement.addEventListener('mousedown', () => {
-            this.removeChar('left');
-            this.textArea.focus();
-            keyElement.classList.add('pressed');
-            timeoutId = setTimeout(() => {
-              intervalId = setInterval(() => {
-                this.removeChar('left');
-                this.textArea.focus();
-                keyElement.classList.add('pressed');
-              }, 40);
-            }, 500);
-          });
-          keyElement.addEventListener('mouseout', () => {
-            clearInterval(intervalId);
-            clearTimeout(timeoutId);
-            this.textArea.focus();
-            keyElement.classList.remove('pressed');
-          });
-          keyElement.addEventListener('mouseup', () => {
-            clearInterval(intervalId);
-            clearTimeout(timeoutId);
-            this.textArea.focus();
-            keyElement.classList.remove('pressed');
-          });
+        case 'Backspace':
+          this.initRemovingListeners(keyElement, this.removeChar, 'left');
           break;
-        }
-        case 'Delete': {
-          let intervalId = null;
-          let timeoutId = null;
-          keyElement.addEventListener('mousedown', () => {
-            this.removeChar('right');
-            this.textArea.focus();
-            keyElement.classList.add('pressed');
-            timeoutId = setTimeout(() => {
-              intervalId = setInterval(() => {
-                this.removeChar('right');
-                this.textArea.focus();
-                keyElement.classList.add('pressed');
-              }, 40);
-            }, 500);
-          });
-          keyElement.addEventListener('mouseout', () => {
-            clearInterval(intervalId);
-            clearTimeout(timeoutId);
-            this.textArea.focus();
-            keyElement.classList.remove('pressed');
-          });
-          keyElement.addEventListener('mouseup', () => {
-            clearInterval(intervalId);
-            clearTimeout(timeoutId);
-            this.textArea.focus();
-            keyElement.classList.remove('pressed');
-          });
+        case 'Delete':
+          this.initRemovingListeners(keyElement, this.removeChar, 'right');
           break;
-        }
         case 'Enter':
           keyElement.addEventListener('click', () => {
             this.inputChar('\n');
@@ -308,5 +256,34 @@ export default class Keyboard {
                           + this.textArea.value.slice(endPosition, this.textArea.value.length);
       this.textArea.selectionEnd = startPosition;
     }
+  }
+
+  initRemovingListeners(element, func, option) {
+    let intervalId = null;
+    let timeoutId = null;
+    element.addEventListener('mousedown', () => {
+      func.call(this, option);
+      this.textArea.focus();
+      element.classList.add('pressed');
+      timeoutId = setTimeout(() => {
+        intervalId = setInterval(() => {
+          this.removeChar(option);
+          this.textArea.focus();
+          element.classList.add('pressed');
+        }, 40);
+      }, 500);
+    });
+    element.addEventListener('mouseout', () => {
+      clearInterval(intervalId);
+      clearTimeout(timeoutId);
+      this.textArea.focus();
+      element.classList.remove('pressed');
+    });
+    element.addEventListener('mouseup', () => {
+      clearInterval(intervalId);
+      clearTimeout(timeoutId);
+      this.textArea.focus();
+      element.classList.remove('pressed');
+    });
   }
 }
