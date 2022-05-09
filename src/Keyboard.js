@@ -64,7 +64,7 @@ export default class Keyboard {
       const keyElement = key.createElement(option);
       key.on('valueChanged', this.renderKeyboard);
       if (key.isChar) {
-        this.initListeners(keyElement, this.inputChar, key.value);
+        this.initListeners(keyElement, this.inputChar, key);
       }
 
       switch (item) {
@@ -295,12 +295,13 @@ export default class Keyboard {
     let intervalId = null;
     let timeoutId = null;
     element.addEventListener('mousedown', () => {
-      func.call(this, option);
+      const innerOption = (typeof option) === 'object' ? option.value : option;
+      func.call(this, innerOption);
       this.textArea.focus();
       element.classList.add('pressed');
       timeoutId = setTimeout(() => {
         intervalId = setInterval(() => {
-          func.call(this, option);
+          func.call(this, innerOption);
           this.textArea.focus();
           element.classList.add('pressed');
         }, 40);
