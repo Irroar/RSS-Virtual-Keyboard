@@ -2,7 +2,8 @@
 
 Vitrual keyboard is a web application that allows you to input symbols and press different hot-keys only with your mouse.
 
-Deploy is hosted on GitHub Pages and available via [link](https://irroar.github.io/RSS-Virtual-Keyboard/)
+Source is available in [rss-virtual-keyboard](https://github.com/Irroar/RSS-Virtual-Keyboard/tree/rss-virtual-keyboard) branch.
+Deploy is hosted on GitHub Pages and available via [link](https://irroar.github.io/RSS-Virtual-Keyboard/).
 
 ## Technologies
 
@@ -11,10 +12,6 @@ Deploy is hosted on GitHub Pages and available via [link](https://irroar.github.
 - used **HTML5** semantic tags
 - used modern **CSS3** styling
 - used ESLint with `eslint-config-airbnb-base` config
-
-
-
-
 
 ## Features
   - switching keyboard layouts between English and Russian language (selected language saved and used on page reload)
