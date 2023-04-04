@@ -1,9 +1,7 @@
 # Virtual Keyboard
 
 Vitrual keyboard is a web application that allows you to input symbols and press different hot-keys only with your mouse.
-
-Source is available in [rss-virtual-keyboard](https://github.com/Irroar/RSS-Virtual-Keyboard/tree/rss-virtual-keyboard) branch.
-Deploy is hosted on GitHub Pages and available via [link](https://irroar.github.io/RSS-Virtual-Keyboard/).
+Demo available via [link](https://irroar.github.io/RSS-Virtual-Keyboard/).
 
 ## Technologies
 
